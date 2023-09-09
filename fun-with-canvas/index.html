@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+  
+  <style>
+    html, body {
+      margin: 0;
+    }
+  </style>
+
+</head>
+
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+
+  <script>
+    class Point2d {
+      constructor(x = 0, y = 0) {
+        this.x = x;
+        this.y = y;
+      }
+
+      get values() {
+        return [this.x, this.y];
+      }
+
+      set values([x, y]) {
+        this.x = x;
+        this.y = y;
+      }
+    }
+  </script>
+
+  <script>
+    const canvas = document.querySelector('#draw')
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width = window.innerWidth;
+    const height = canvas.height = window.innerHeight;
+    
+    ctx.lineCap = ctx.lineJoin = 'round';
+
+    const defaultLineWidth = 10;
+    const maxLineWidth = 100;
+    let lineWidth = defaultLineWidth;
+    const lineWidthStep = 0.6;
+
+
+    let hue = 0;
+
+    let isDrawing = false;
+
+    const lastPoint = new Point2d();
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function draw(e) {
+      if(!isDrawing) return;
+
+      const currentPoint = [e.offsetX, e.offsetY];
+      
+      ctx.strokeStyle = `hsl(${hue++}, 100%, 50%)`
+      ctx.lineWidth = clamp(lineWidth, defaultLineWidth, maxLineWidth);
+      ctx.beginPath();
+      ctx.moveTo(...lastPoint.values);
+      ctx.lineTo(...currentPoint);
+      ctx.stroke();
+
+      lastPoint.values = currentPoint;
+      if(hue >= 360) hue = 0;
+      lineWidth += lineWidthStep;
+    }
+
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true
+      lineWidth = defaultLineWidth;
+      lastPoint.values = [e.offsetX, e.offsetY];
+    });
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseleave', () => isDrawing = false);
+  </script>
+
+</body>
+
+</html>

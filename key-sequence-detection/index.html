@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+<script>
+  function secretCode(secretCode, cb) {
+    const lastPressed = [];
+
+    window.addEventListener('keyup', e => {
+      lastPressed.push(e.key);
+
+      lastPressed.splice(-secretCode.length - 1, lastPressed.length - secretCode.length);
+
+      if(lastPressed.join('').includes(secretCode)) cb();
+    })
+  }
+
+  secretCode('unicorns', cornify_add)
+</script>
+</body>
+</html>

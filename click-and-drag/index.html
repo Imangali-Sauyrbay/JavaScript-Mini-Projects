@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click and Drag</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="items">
+    <div class="item item1">01</div>
+    <div class="item item2">02</div>
+    <div class="item item3">03</div>
+    <div class="item item4">04</div>
+    <div class="item item5">05</div>
+    <div class="item item6">06</div>
+    <div class="item item7">07</div>
+    <div class="item item8">08</div>
+    <div class="item item9">09</div>
+    <div class="item item10">10</div>
+    <div class="item item11">11</div>
+    <div class="item item12">12</div>
+    <div class="item item13">13</div>
+    <div class="item item14">14</div>
+    <div class="item item15">15</div>
+    <div class="item item16">16</div>
+    <div class="item item17">17</div>
+    <div class="item item18">18</div>
+    <div class="item item19">19</div>
+    <div class="item item20">20</div>
+    <div class="item item21">21</div>
+    <div class="item item22">22</div>
+    <div class="item item23">23</div>
+    <div class="item item24">24</div>
+    <div class="item item25">25</div>
+  </div>
+
+<script>
+  class HorizontalSlider {
+    constructor(selector) {
+      this.slider = document.querySelector(selector);
+      this.isDown = false;
+      this.startX = null;
+      this.scrollLeft = null;
+
+      this._initListeners();
+    }
+
+    _initListeners() {
+      const that = this;
+      [
+        { event: 'mousedown', handler: that['onMouseDown'] },
+        { event: 'mouseup', handler: that['onMouseUp'] },
+        { event: 'mouseleave', handler: that['onMouseLeave'] },
+        { event: 'mousemove', handler: that['onMouseMove'] }
+      ]
+      .forEach(({event, handler = Function.prototype}) => that.slider.addEventListener(event, handler.bind(that)));
+    }
+
+    onMouseDown(e) {
+      this.isDown = true;
+      this.classListActive()
+      this.startX = this._getX(e);
+      this.scrollLeft = this.slider.scrollLeft;
+    }
+
+    onMouseUp(e) {
+      this.isDown = false;
+      this.classListActive(false);
+    }
+
+    onMouseLeave(e) {
+      this.isDown = false;
+      this.classListActive(false);
+    }
+
+    onMouseMove(e) {
+      if(!this.isDown) return;
+      e.preventDefault();
+
+      const x = this._getX(e);
+      const walk = x - this.startX;
+      this.slider.scrollLeft = this.scrollLeft - walk * 3
+    }
+
+    classListActive(isActive = true) {
+      this.slider.classList[isActive ? 'add' : 'remove']('active');
+    }
+
+    _getX(e) {
+      return e.pageX - this.slider.offsetLeft;
+    }
+  }
+
+  new HorizontalSlider('.items')
+</script>
+
+  </body>
+</html>

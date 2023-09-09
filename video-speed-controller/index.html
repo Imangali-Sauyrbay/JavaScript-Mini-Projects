@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
+    <div class="speed">
+      <div class="speed-bar"><p class="text-bar">1x</p></div>
+      
+    </div>
+  </div>
+
+<script>
+  const speed = document.querySelector('.speed');
+  const bar = speed.querySelector('.speed-bar');
+  const textBar = speed.querySelector('.text-bar');
+  const video = document.querySelector('.flex');
+  const step = 0.05;
+  const min = 0.15;
+  const max = 4;
+
+  function handleMove(e) {
+    let y = e.offsetY;
+
+    if(e instanceof TouchEvent) {
+      y = e.targetTouches[0].pageY - speed.offsetTop;
+    }
+    
+    const percent = y / this.offsetHeight;
+    
+    let playbackRate = (1 - percent) * (max - min) + min;
+    
+    playbackRate = (playbackRate.toFixed(2) <= max - step)
+    ? (playbackRate - (playbackRate % step))
+    : max;
+
+    playbackRate = clamp(playbackRate, min, max).toFixed(2);
+
+    const height = ~~(+percent.toFixed(2) * 100);
+
+    textBar.classList[height < 30 ? 'add' : 'remove']('move-down');
+
+    textBar.textContent = playbackRate + 'x';
+    bar.style.height = height + '%';
+    video.playbackRate = playbackRate;
+  }
+
+  function handleMouseDown(e) {
+    speed.onmousemove = handleMove;
+    speed.onmouseup = _remove;
+    speed.onmouseleave = _remove;
+
+    speed.ontouchmove = handleMove;
+    speed.ontouchend = _remove;
+
+    function _remove(e) {
+      speed.onmousemove = null;
+      speed.onmouseup = null;
+      speed.onmouseleave = null;
+
+      speed.ontouchmove = null;
+      speed.ontouchend = null;
+    }
+
+    handleMove.call(this, e);
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+
+  speed.addEventListener('mousedown', handleMouseDown);
+  speed.addEventListener('touchstart', handleMouseDown);
+</script>
+</body>
+</html>

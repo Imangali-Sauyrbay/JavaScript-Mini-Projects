@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+    console.log('Hello');
+
+    // Interpolated
+    console.log('Hello I am %s string!', 'just');
+
+    // Styled
+    console.log('%c I am styled and cool text!', 'background: linear-gradient(to right, #3c096c 0%, #9d4edd 100%); font-style: italic; font-weight: bolder; font-size: 24px; color: #deaaff; text-align:center;')
+
+    // warning!
+    console.warn('oh noooo');
+
+    // Error :|
+    console.error('f***!')
+
+    // Info
+    console.info('If you die then you will die!');
+
+    // Testing
+    console.assert(NaN == NaN, 'Why NaN != NaN ????');
+
+    // clearing
+    // console.clear();
+    console.info('To clear use console.clear();')
+
+    // timing
+    console.time('sorting 1,000,000 elems');
+    const nums = Array(1_000_000).fill('').map(() => Math.random() * 1000).sort((a, b) => a - b);
+    // console.log(nums)
+    console.timeEnd('sorting 1,000,000 elems')
+
+    // Viewing DOM Elements
+    console.dir(document.querySelector('p'));
+
+    // Grouping together
+    dogs.forEach(({name, age}) => {
+      console.groupCollapsed(name);
+
+      console.log(`This is ${name}`);
+      console.log(`${name} is ${age} yo.!`);
+      console.log(`${name} will be ${age + 7} yo. after 7 years later!`)
+
+      console.groupEnd(name);
+    })
+    // counting
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.countReset('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+    console.count('Hello')
+  </script>
+</body>
+</html>
